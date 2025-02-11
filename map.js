@@ -116,11 +116,19 @@ pubs.forEach(function(pub) {
 
 
 // Přidání vrstev do mapy
-venueLayer.addTo(map);
-transportLayer.addTo(map);
-restaurantsLayer.addTo(map);
-pubsLayer.addTo(map);
-hotelsLayer.addTo(map);
+function getUrlParams() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('layers') ? params.get('layers').split(',') : [];
+}
+
+var activeLayers = getUrlParams();
+
+// Enable only selected layers based on URL parameters
+if (activeLayers.includes("hotels")) hotelsLayer.addTo(map);
+if (activeLayers.includes("restaurants")) restaurantsLayer.addTo(map);
+if (activeLayers.includes("pubs")) pubsLayer.addTo(map);
+if (activeLayers.includes("transport")) transportLayer.addTo(map);
+if (activeLayers.includes("venue")) venueLayer.addTo(map);
 
 // Přepínač vrstev
 var overlayMaps = {
