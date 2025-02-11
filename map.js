@@ -14,6 +14,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 var venueLayer = L.layerGroup( );
 var hotelsLayer = L.layerGroup();
 var restaurantsLayer = L.layerGroup();
+var cafesLayer = L.layerGroup();
 var pubsLayer = L.layerGroup();
 var transportLayer = L.layerGroup();
 
@@ -60,13 +61,14 @@ var restaurants = [
     { name: "Chef Viet", lat: 49.2061636, lon: 16.5964289, url: "https://chefviet.cz/", desc: "Supr když je ve Pho Eden plno"},
     { name: "Siwa", lat: 49.2009106, lon: 16.6003492, url: "http://www.siwaorient.cz/", desc: "Orientální kuchyň, blízký východ"},
     { name: "Pivní stáj", lat: 49.2011931, lon: 16.5999325, url: "https://www.pivnistaj.cz/", desc: "Fajn obědové burgry"},
-    { name: "Mulgogi", lat: 49.2027014, lon: 16.5974736, url: "https://mulgogi.cz/", desc: "Korejšká kuchyň"},
+    { name: "Mulgogi", lat: 49.2027014, lon: 16.5974736, url: "https://mulgogi.cz/", desc: "Korejská kuchyň"},
     { name: "Immigrant", lat: 49.2031617, lon: 16.5968136, url: "https://www.theimmigrant.cz/", desc: "Když je chuť na Guiness"},
+    { name: "Oaza", lat: 49.1999564, lon: 16.6020278, url: "https://www.oaza-brno.cz/", desc: "Vegetariánská"},
+    { name: "Vegalite", lat: 49.2004122, lon: 16.6025428, url: "http://vegalite.cz/", desc: "Vegetariánská"},
     { name: "Mitrovski", lat: 49.1881367, lon: 16.5888422, url: "www.mitrovski.cz"},
     { name: "AN wok & grill", lat: 49.1885022, lon: 16.5944053, url: "www.facebook.com/anwokgrill"},
     { name: "Pivovarská Mendlák s.r.o.", lat: 49.1909661, lon: 16.5927697, url: "https://www.pivovarska-starobrno.cz", desc: "České klasiky"},
     { name: "Bonjour Vietnam", lat: 49.1884711, lon: 16.5976431, url: "www.facebook.com/Bonjour-Vietnam"},
-    { name: "Sorry - pečeme jinak", lat: 49.1888186, lon: 16.5950008, url: "www.sorry-jinak.cz", desc: "Skvělé kafe a dortíky <3"},
     { name: "Ramen Brno", lat: 49.1890425, lon: 16.5955769, url: "https://ramen-brno.cz/", desc: "Nejlepší Ramen v Brně, Otevřeno 11-14 a 17-20"},
 ]
 
@@ -77,6 +79,14 @@ var pubs = [
     { name: "U všech svatých", lat: 49.1887736, lon: 16.5975906, url: "www.facebook.com/uvsechsvatych", desc: "Ochutnejte višňovku s chilli"},
     { name: "Immigrant", lat: 49.2031617, lon: 16.5968136, url: "https://www.theimmigrant.cz/", desc: "Když je chuť na Guiness"},
     { name: "Na dobré cestě", lat: 49.2028956, lon: 16.5984131, url: "http://jsmenadobreceste.cz/", desc: "Hospoda s atmosférou, supr Dalešice"},
+]
+
+//Data cafe
+var cafes = [
+    { name: "Sorry - pečeme jinak", lat: 49.1888186, lon: 16.5950008, url: "www.sorry-jinak.cz"},
+    { name: "MARINĀDA", lat: 49.2010383, lon: 16.5961556, url: "http://www.marinada-store.cz/"},
+    { name: "Punkt.", lat: 49.2061967, lon: 16.6019803, url: "https://www.facebook.com/"},
+    { name: "Kafec", lat: 49.2035439, lon: 16.5935281, url: "https://www.kafec.cz/"},
 ]
 
 function createAwesomeMarker(icon, markerColor) {
@@ -123,6 +133,17 @@ restaurants.forEach(function(restaurant) {
     marker.addTo(restaurantsLayer);
 });
 
+// Přidání kaváren
+cafes.forEach(function(cafe) {
+    var marker = L.marker([cafe.lat, cafe.lon], { icon: createAwesomeMarker('mug-saucer', 'purple') })
+    if (cafe.desc === undefined) {
+        marker.bindTooltip(`<b>${cafe.name}</b><br><a href='${cafe.url}' target='_blank'>${cafe.url}</a>`);
+    } else {
+        marker.bindTooltip(`<b>${cafe.name}</b><br><a href='${cafe.url}' target='_blank'>${cafe.url}</a><br>Náš tip: ${cafe.desc}`);
+    };
+    marker.addTo(cafesLayer);
+});
+
 // Přidání hospod
 pubs.forEach(function(pub) {
     var marker = L.marker([pub.lat, pub.lon], { icon: createAwesomeMarker('beer-mug-empty', 'orange') })
@@ -149,6 +170,8 @@ if (activeLayers.includes("restaurants")) restaurantsLayer.addTo(map);
 if (activeLayers.includes("pubs")) pubsLayer.addTo(map);
 if (activeLayers.includes("transport")) transportLayer.addTo(map);
 if (activeLayers.includes("venue")) venueLayer.addTo(map);
+if (activeLayers.includes("cafes")) cafesLayer.addTo(map);
+
 
 // Přepínač vrstev
 var overlayMaps = {
@@ -156,6 +179,7 @@ var overlayMaps = {
     "Hotely": hotelsLayer,
     "Restaurace": restaurantsLayer,
     "Hospody": pubsLayer,
+    "Kavárny": cafesLayer,
     "Doprava": transportLayer
 };
 
