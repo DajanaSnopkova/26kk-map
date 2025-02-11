@@ -41,26 +41,42 @@ var hotels = [
 // Data doprava
 var transport = [
     { name: "Hlavní nádraží (vlak)", lat: 49.1905822, lon: 16.6128025},
-    { name: "Hlavní nádraží (šalina)", lat: 49.1910819, lon: 16.6119806, details: "-> Konečného náměstí: 12"},
+    { name: "Hlavní nádraží (šalina)", lat: 49.1910819, lon: 16.6119806, details: "-> Konečného náměstí: 12<br>-> Křídlovická: 7,8"},
     { name: "Hlavní nádraží (šalina)", lat: 49.1911964, lon: 16.6118964, details: "-> Poříčí: 2"},
+    { name: "Opuštěná (bus)", lat: 49.1858789, lon: 16.6139697, details: "-> Poříčí: 84"},
     { name: "Konečného náměstí (trolej)", lat: 49.2050475, lon: 16.5958253, details: "-> Mendlovo náměstí: 25, 26"},
     { name: "Konečného náměstí (šalina)", lat: 49.2039908, lon: 16.5960158, details: "-> Hlavní nádraží: 12"},
     { name: "Mendlovo náměstí (trolej)", lat: 49.1898614, lon: 16.5931872, details: "-> Konečného náměstí: 25, 26"},
     { name: "Poříčí (šalina)", lat: 49.1874200, lon: 16.5945319, details: "-> Hlavní nádraží: 2"},
+    { name: "Poříčí (bus)", lat: 49.1871567, lon: 16.5946103, details: "-> Opuštěná: 44"},
+    { name: "Grand Hotel (bus dálkový)", lat: 49.1935158, lon: 16.6144772},
+    { name: "Zvonařka (bus dálkový)", lat: 49.1858217, lon: 16.6167317},
 ]
 
 // Data restaurace
 var restaurants = [
+    { name: "Everest Indie", lat: 49.2033717, lon: 16.5965519, url: "www.everestbrno.cz", desc: "Velké porce za málo peněz"},
+    { name: "Pho Eden", lat: 49.2035833, lon: 16.5962469, url: "https://www.facebook.com/people/Pho-Eden", desc: "Nejlepší Pho v Brně, ale bývá plno"},
+    { name: "Chef Viet", lat: 49.2061636, lon: 16.5964289, url: "https://chefviet.cz/", desc: "Supr když je ve Pho Eden plno"},
+    { name: "Siwa", lat: 49.2009106, lon: 16.6003492, url: "http://www.siwaorient.cz/", desc: "Orientální kuchyň, blízký východ"},
+    { name: "Pivní stáj", lat: 49.2011931, lon: 16.5999325, url: "https://www.pivnistaj.cz/", desc: "Fajn obědové burgry"},
+    { name: "Mulgogi", lat: 49.2027014, lon: 16.5974736, url: "https://mulgogi.cz/", desc: "Korejšká kuchyň"},
+    { name: "Immigrant", lat: 49.2031617, lon: 16.5968136, url: "https://www.theimmigrant.cz/", desc: "Když je chuť na Guiness"},
     { name: "Mitrovski", lat: 49.1881367, lon: 16.5888422, url: "www.mitrovski.cz"},
     { name: "AN wok & grill", lat: 49.1885022, lon: 16.5944053, url: "www.facebook.com/anwokgrill"},
-    { name: "Pivovarská Mendlák s.r.o.", lat: 49.1909661, lon: 16.5927697, url: "https://www.pivovarska-starobrno.cz"}
+    { name: "Pivovarská Mendlák s.r.o.", lat: 49.1909661, lon: 16.5927697, url: "https://www.pivovarska-starobrno.cz", desc: "České klasiky"},
+    { name: "Bonjour Vietnam", lat: 49.1884711, lon: 16.5976431, url: "www.facebook.com/Bonjour-Vietnam"},
+    { name: "Sorry - pečeme jinak", lat: 49.1888186, lon: 16.5950008, url: "www.sorry-jinak.cz", desc: "Skvělé kafe a dortíky <3"},
+    { name: "Ramen Brno", lat: 49.1890425, lon: 16.5955769, url: "https://ramen-brno.cz/", desc: "Nejlepší Ramen v Brně, Otevřeno 11-14 a 17-20"},
 ]
 
 // Data hospody
 var pubs = [
     { name: "Mitrovski", lat: 49.1881367, lon: 16.5888422, url: "www.mitrovski.cz"},
     { name: "Pivovarská Mendlák s.r.o.", lat: 49.1909661, lon: 16.5927697, url: "https://www.pivovarska-starobrno.cz"},
-    { name: "U všech svatých", lat: 49.1887736, lon: 16.5975906, url: "www.facebook.com/uvsechsvatych", desc: "Ochutnejte višňovku s chilli"}
+    { name: "U všech svatých", lat: 49.1887736, lon: 16.5975906, url: "www.facebook.com/uvsechsvatych", desc: "Ochutnejte višňovku s chilli"},
+    { name: "Immigrant", lat: 49.2031617, lon: 16.5968136, url: "https://www.theimmigrant.cz/", desc: "Když je chuť na Guiness"},
+    { name: "Na dobré cestě", lat: 49.2028956, lon: 16.5984131, url: "http://jsmenadobreceste.cz/", desc: "Hospoda s atmosférou, supr Dalešice"},
 ]
 
 function createAwesomeMarker(icon, markerColor) {
@@ -74,7 +90,7 @@ function createAwesomeMarker(icon, markerColor) {
 // Přidání míst konference
 venues.forEach(function(venue) {
     L.marker([venue.lat, venue.lon], { icon: createAwesomeMarker('circle', 'red') })
-        .bindTooltip(`<b>${venue.name}</b>`)
+        .bindTooltip(`<b>${venue.name}</b>`, {permanent: true, direction: 'top', offset: [0,-20], opacity:0.75})
         .addTo(venueLayer);
 });
 
@@ -98,9 +114,13 @@ hotels.forEach(function(hotel) {
 
 // Přidání restaurací
 restaurants.forEach(function(restaurant) {
-    L.marker([restaurant.lat, restaurant.lon], { icon: createAwesomeMarker('utensils', 'darkpurple') })
-        .bindTooltip(`<b>${restaurant.name}</b><br><a href='${restaurant.url}' target='_blank'>${restaurant.url}</a>`)
-        .addTo(restaurantsLayer);
+    var marker = L.marker([restaurant.lat, restaurant.lon], { icon: createAwesomeMarker('utensils', 'darkpurple') })
+    if (restaurant.desc === undefined) {
+        marker.bindTooltip(`<b>${restaurant.name}</b><br><a href='${restaurant.url}' target='_blank'>${restaurant.url}</a>`);
+    } else {
+        marker.bindTooltip(`<b>${restaurant.name}</b><br><a href='${restaurant.url}' target='_blank'>${restaurant.url}</a><br>Náš tip: ${restaurant.desc}`);
+    };
+    marker.addTo(restaurantsLayer);
 });
 
 // Přidání hospod
